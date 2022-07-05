@@ -98,14 +98,23 @@
           <li>关于我们</li>
         </ul>
         <p>地址：北京市昌平区宏福科技园综合楼6层</p>
-        <p>京ICP备19006430号</p>
+        <div class="icp">
+          <a
+            href="https://beian.miit.gov.cn/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >蜀ICP备2022016594号</a
+          >
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {name:'index'};
+export default {
+  name: "index",
+};
 </script>
 
 <style lang='less'>
@@ -146,7 +155,10 @@ export default {name:'index'};
 
     .copyright {
       padding: 20px;
-
+    .icp {
+        margin: 10px 0;
+        text-align: center;
+      }
       .helpLink {
         text-align: center;
 
