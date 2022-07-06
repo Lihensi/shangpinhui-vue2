@@ -16,6 +16,15 @@ VueRouter.prototype.push=function(location,resolve,reject){
   // alert("123")
   if(resolve&& reject){
     originPush.call(this,location,resolve,reject)
+  }else{
+    originPush.call(this,location,()=>{},()=>{});
+  }
+}
+VueRouter.prototype.replace=function(location,resolve,reject){
+  if(resolve&&reject){
+    originPush.call(this,location,resolve,reject)
+  }else{
+    originPush.call(this,location,()=>{},()=>{});
   }
 }
 
