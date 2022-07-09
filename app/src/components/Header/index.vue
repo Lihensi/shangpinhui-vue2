@@ -55,6 +55,11 @@
 <script>
 export default {
   name: "index",
+  data() {
+    return {
+      keyword:''
+    }
+  },
   methods: {
     goSearch() {
       // 路由传参
