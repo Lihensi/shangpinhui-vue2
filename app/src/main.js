@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 // 三级联动组件
-import TypeNav from '@/pages/Home/TypeNav'
+import TypeNav from '@/components/TypeNav'
 import router from '@/router/index'
+// 引入仓库
+import store from '@/store'
 
+// import {reqCategoryList} from '@/api'
+// reqCategoryList();
 // 注册为全局组件
 Vue.component(TypeNav.name,TypeNav)
 Vue.config.productionTip = false
@@ -12,4 +16,6 @@ new Vue({
   render: h => h(App),
   // 注册路由
   router,
+  // 注册仓库
+  store
 }).$mount('#app')

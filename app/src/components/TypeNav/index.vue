@@ -1692,19 +1692,8 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
 export default {
-name:'TypeNav',
-// 组件挂载完毕，可以向服务器发起请求
-mounted() {
-    // 通知vuex发请求，获取数据，存储与仓库之中
-    this.$store.dispatch('categoryList')
-},
-computed:{
-    ...mapState({
-        
-    })
-}
+name:'TypeNav'
 }
 </script>
 
