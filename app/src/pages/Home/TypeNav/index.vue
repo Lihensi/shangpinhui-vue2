@@ -1702,6 +1702,12 @@ mounted() {
 },
 computed:{
     ...mapState({
+        // 对象写法右侧需要一个函数，当使用这个计算属性时，右侧函数会执行一次
+        // 注入一个参数state，其实为大仓库的数据
+        categoryList:(state)=>{
+            // console.log(state)
+            return state.home.categoryList;
+        }
         
     })
 }
