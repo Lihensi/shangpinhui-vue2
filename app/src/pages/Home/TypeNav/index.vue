@@ -14,21 +14,21 @@
                 </nav>
                 <div class="sort">
                     <div class="all-sort-list2">
-                        <div class="item bo">
+                        <div class="item" v-for="(c1,index) in categoryList" :key="c1.categoryId">
                             <h3>
-                                <a href="">图书、音像、数字商品</a>
+                                <a href="">{{c1.categoryName}}</a>
                             </h3>
                             <div class="item-list clearfix">
-                                <div class="subitem">
+                                <div class="subitem" v-for="(c2,index) in c1.categoryChild" :key="c2.categoryId">
                                     <dl class="fore">
                                         <dt>
-                                            <a href="">电子书</a>
+                                            <a href="">{{c2.categoryName}}</a>
                                         </dt>
                                         <dd>
-                                            <em>
-                                                <a href="">婚恋/两性</a>
+                                            <em v-for="(c3,index) in c2.categoryChild" :key="c3.categoryId">
+                                                <a href="">{{c3.categoryName}}</a>
                                             </em>
-                                            <em>
+                                            <!-- <em>
                                                 <a href="">文学</a>
                                             </em>
                                             <em>
@@ -36,14 +36,13 @@
                                             </em>
                                             <em>
                                                 <a href="">畅读VIP</a>
-                                            </em>
+                                            </em> -->
                                         </dd>
                                     </dl>
                                 </div>
                             </div>
                         </div>
-                        <div class="item">
-                            <h3>
+                            <!-- <h3>
                                 <a href="">家用电器</a>
                             </h3>
                             <div class="item-list clearfix">
@@ -1684,7 +1683,7 @@
                             <h3>
                                 <a href="">箱包</a>
                             </h3>
-                        </div>
+                        </div>  -->
                     </div>
                 </div>
             </div>
