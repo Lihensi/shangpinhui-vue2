@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 // 三级联动组件
 import TypeNav from '@/components/TypeNav'
-import router from '@/router/index'
+import router from '@/router'
 // 引入仓库
 import store from '@/store'
 
