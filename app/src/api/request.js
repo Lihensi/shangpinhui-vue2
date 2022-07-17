@@ -31,4 +31,4 @@ requests.interceptors.response.use((res)=>{
 
 
 // 对外暴露
-export default axios;
+export default requests;

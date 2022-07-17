@@ -1,11 +1,12 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
+  productionSourceMap:false,
   lintOnSave:false,
   devServer:{
     proxy:{
       '/api':{
-        target:'http://zerolist.cn',
+        target:'http://gmall-h5-api.atguigu.cn',
         // 路径重写
         // pathRewrite:{'^/api':''},
       },
