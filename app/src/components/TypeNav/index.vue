@@ -1,57 +1,71 @@
 <template>
   <div class="type-nav">
     <div class="container">
-      <div @mouseleave="leaveIndex">
+      <div @mouseleave="leaveShow" @mouseenter="enterShow">
         <h2 class="all">全部商品分类</h2>
-        <div class="sort">
-          <!-- 事件委派 -->
-          <div class="all-sort-list2" @click='goSearch'>
-            <div
-              class="item"
-              v-for="(c1, index) in categoryList"
-              :key="c1.categoryId"
-              :class="{ cur: currentIndex == index }"
-            >
-              <h3 @mouseenter="changeIndex(index)" @mouseleave="leaveIndex">
-                <!-- 索引值,编程式导航 -->
-                <a>{{ c1.categoryName }}</a>
-                <!-- 声明式导航,会出现卡顿现象 -->
-                <!-- <router-link to="/search">{{ c1.categoryName }}</router-link> -->
-              </h3>
-              <!-- 二级三级分类 -->
+        <transition name='sort'>
+          <div class="sort" v-show="show">
+            <!-- 事件委派 -->
+            <div class="all-sort-list2" @click="goSearch">
               <div
-                class="item-list clearfix"
-                :style="{ display: currentIndex == index ? 'block' : 'none' }"
+                class="item"
+                v-for="(c1, index) in categoryList"
+                :key="c1.categoryId"
+                :class="{ cur: currentIndex == index }"
               >
+                <h3 @mouseenter="changeIndex(index)" @mouseleave="leaveIndex">
+                  <!-- 索引值,编程式导航 -->
+                  <a
+                    :data-categoryName="c1.categoryName"
+                    :data-category1Id="c1.categoryId"
+                    >{{ c1.categoryName }}</a
+                  >
+                  <!-- 声明式导航,会出现卡顿现象 -->
+                  <!-- <router-link to="/search">{{ c1.categoryName }}</router-link> -->
+                </h3>
+                <!-- 二级三级分类 -->
                 <div
-                  class="subitem"
-                  v-for="(c2, index) in c1.categoryChild"
-                  :key="c2.categoryId"
+                  class="item-list clearfix"
+                  :style="{ display: currentIndex == index ? 'block' : 'none' }"
                 >
-                  <dl class="fore">
-                    <dt>
-                      <a>{{ c2.categoryName }}</a>
-                      <!-- <router-link to="/search">{{
+                  <div
+                    class="subitem"
+                    v-for="(c2, index) in c1.categoryChild"
+                    :key="c2.categoryId"
+                  >
+                    <dl class="fore">
+                      <dt>
+                        <a
+                          :data-categoryName="c2.categoryName"
+                          :data-category2Id="c2.categoryId"
+                          >{{ c2.categoryName }}</a
+                        >
+                        <!-- <router-link to="/search">{{
                         c2.categoryName
                       }}</router-link> -->
-                    </dt>
-                    <dd>
-                      <em
-                        v-for="(c3, index) in c2.categoryChild"
-                        :key="c3.categoryId"
-                      >
-                        <a>{{ c3.categoryName }}</a>
-                        <!-- <router-link to="/search">{{
+                      </dt>
+                      <dd>
+                        <em
+                          v-for="(c3, index) in c2.categoryChild"
+                          :key="c3.categoryId"
+                        >
+                          <a
+                            :data-categoryName="c3.categoryName"
+                            :data-category3Id="c3.categoryId"
+                            >{{ c3.categoryName }}</a
+                          >
+                          <!-- <router-link to="/search">{{
                           c3.categoryName
                         }}</router-link> -->
-                      </em>
-                    </dd>
-                  </dl>
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </transition>
       </div>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -83,10 +97,15 @@ export default {
   data() {
     return {
       currentIndex: -1,
+      show: true,
     };
   },
   mounted() {
-    this.$store.dispatch("categoryList");
+
+    // 当组件挂在完毕，让show属性变为false，加个判断条件
+    if (this.$route.path != "/home") {
+      this.show = false;
+    }
   },
   computed: {
     ...mapState({
@@ -110,9 +129,36 @@ export default {
       this.currentIndex = -1;
     },
     // 路由跳转
-    goSearch() {
+    goSearch(event) {
       // 最好方式：事件委派+编程式导航
-      this.$router.push("/search");
+      let node = event.target;
+      // 节点·有一个dataset属性，可以过去节点的自定义属性和属性值，会自动转成小写
+      let { categoryname, category1id, category2id, category3id } =
+        node.dataset;
+      if (categoryname) {
+        // 整理路由跳转的参数
+        let location = { name: "search" };
+        let query = { categoryName: categoryname };
+        if (category1id) {
+          query.category1Id = category1id;
+        } else if (category2id) {
+          query.category2Id = category2id;
+        } else {
+          query.category3Id = category3id;
+        }
+        location.query = query;
+        // 路由跳转
+        this.$router.push(location);
+      }
+    },
+    enterShow() {
+      this.show = true;
+    },
+    leaveShow() {
+      this.currentIndex = -1;
+      if (this.$route.path != "home") {
+        this.show = false;
+      }
     },
   },
 };
@@ -243,6 +289,16 @@ export default {
           background-color: skyblue;
         }
       }
+    }
+    // 过渡动画的样式
+    .sort-enter{
+      height: 0;
+    }
+    .sort-enter-to{
+      height: 461px;
+    }
+    .sort-enter-active{
+      transition: all .5s linear;
     }
   }
 }
