@@ -6,6 +6,7 @@ import router from '@/router'
 // 引入仓库
 import store from '@/store'
 
+
 // import {reqCategoryList} from '@/api'
 // reqCategoryList();
 // 注册为全局组件

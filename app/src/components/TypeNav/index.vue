@@ -4,7 +4,8 @@
       <div @mouseleave="leaveIndex">
         <h2 class="all">全部商品分类</h2>
         <div class="sort">
-          <div class="all-sort-list2">
+          <!-- 事件委派 -->
+          <div class="all-sort-list2" @click='goSearch'>
             <div
               class="item"
               v-for="(c1, index) in categoryList"
@@ -12,8 +13,10 @@
               :class="{ cur: currentIndex == index }"
             >
               <h3 @mouseenter="changeIndex(index)" @mouseleave="leaveIndex">
-                <!-- 索引值 -->
-                <a href="">{{ c1.categoryName }}</a>
+                <!-- 索引值,编程式导航 -->
+                <a>{{ c1.categoryName }}</a>
+                <!-- 声明式导航,会出现卡顿现象 -->
+                <!-- <router-link to="/search">{{ c1.categoryName }}</router-link> -->
               </h3>
               <!-- 二级三级分类 -->
               <div
@@ -27,14 +30,20 @@
                 >
                   <dl class="fore">
                     <dt>
-                      <a href="">{{ c2.categoryName }}</a>
+                      <a>{{ c2.categoryName }}</a>
+                      <!-- <router-link to="/search">{{
+                        c2.categoryName
+                      }}</router-link> -->
                     </dt>
                     <dd>
                       <em
                         v-for="(c3, index) in c2.categoryChild"
                         :key="c3.categoryId"
                       >
-                        <a href="">{{ c3.categoryName }}</a>
+                        <a>{{ c3.categoryName }}</a>
+                        <!-- <router-link to="/search">{{
+                          c3.categoryName
+                        }}</router-link> -->
                       </em>
                     </dd>
                   </dl>
@@ -61,6 +70,10 @@
 <script>
 //利用辅助函数获取仓库state数据--->mapState
 import { mapState } from "vuex";
+// 防抖，节流,把lodash全部功能引入
+// import _ from "lodash";
+// 最好按需引入，性能优化,默认暴露
+import throttle from "lodash/throttle";
 //mapState辅助函数执行:数组、对象
 //底下的这种写法:是将lodash全部API引入,将来项目打包的时候，体积会大一些
 // import _ from "lodash";
@@ -84,11 +97,22 @@ export default {
   },
   methods: {
     // 鼠标进入修改响应式数据currentIndex属性
-    changeIndex(index) {
+    // changeIndex(index) {
+    //   // 用户行为过快，经过测试，只有部分h3触发
+    //   this.currentIndex = index;
+    // },
+    // 节流写法，别用箭头函数
+    changeIndex: throttle(function (index) {
       this.currentIndex = index;
-    },
+      console.log("处理业务" + index);
+    }, 10),
     leaveIndex(index) {
       this.currentIndex = -1;
+    },
+    // 路由跳转
+    goSearch() {
+      // 最好方式：事件委派+编程式导航
+      this.$router.push("/search");
     },
   },
 };
