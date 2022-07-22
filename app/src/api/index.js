@@ -17,3 +17,6 @@ export const reqBannerList = () => mockRequests.get('/banner');
 
 // floor数据
 export const reqFloorList=()=>mockRequests.get('/floor')
+// 搜索模块search post请求 /api/list axios 带参数
+// 至少是一个空对象
+export const reqSearchInfo = (params)=>requests({url:'/list',method:'post',data:params})
