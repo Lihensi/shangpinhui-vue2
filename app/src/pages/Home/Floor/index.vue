@@ -34,12 +34,8 @@
           <div class="floor-1">
             <div class="blockgary">
               <ul class="jd-list">
-                <li>节能补贴</li>
-                <li>4K电视</li>
-                <li>空气净化器</li>
-                <li>IH电饭煲</li>
-                <li>滚筒洗衣机</li>
-                <li>电热水器</li>
+                <li v-for=""></li>
+
               </ul>
               <img src="./images/floor-1-1.png" />
             </div>
@@ -95,6 +91,7 @@
 <script>
 export default {
   name: "",
+  props:['list']
 };
 </script>
 

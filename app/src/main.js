@@ -5,7 +5,9 @@ import TypeNav from '@/components/TypeNav'
 import router from '@/router'
 // 引入仓库
 import store from '@/store'
-
+// 引入mockServejs
+import '@/mock/mockServe'
+import 'swiper/css/swiper.css';
 
 // import {reqCategoryList} from '@/api'
 // reqCategoryList();

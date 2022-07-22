@@ -5,8 +5,12 @@
         <!--banner轮播-->
         <div class="swiper-container" id="mySwiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner1.jpg" />
+            <div
+              class="swiper-slide"
+              v-for="(carousel, index) in bannerList"
+              :key="carousel.id"
+            >
+              <img :src="carousel.imgUrl" />
             </div>
             <!-- <div class="swiper-slide">
               <img src="./images/banner2.jpg" />
@@ -100,8 +104,58 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+// 引包，样式最好在mainjs
+import Swiper from "swiper";
 export default {
-  name:'ListContainer'
+  name: "ListContainer",
+  mounted() {
+    // 派发action，通过vuex发起ajax请求，将数据存储在仓库中
+    this.$store.dispatch("bannerList");
+  },
+  computed: {
+    ...mapState({
+      bannerList: (state) => state.home.bannerList,
+    }),
+  },
+  // watch+ nexttick 最完美的解决方法
+  watch: {
+    // 监听bannerList数据的变化，对象写法handler
+    // 只能保证bannerList数据有了，没办法保证v-for执行完
+
+    // nextTick 服务器数据回来了，下次dom更新执行， 在修改数据后，立即使用这个方法
+    bannerList: {
+      handler(newValue, oldValue) {
+        this.$nextTick(() => {
+          var mySwiper = new Swiper(
+            document.querySelector(".swiper-container"),
+            {
+              // direction: 'vertical', // 垂直切换选项
+              loop: true, // 循环模式选项
+
+              // 如果需要分页器
+              pagination: {
+                el: ".swiper-pagination",
+                // 点小球可以切换
+                clickable: true,
+              },
+
+              // 如果需要前进后退按钮
+              navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+              },
+
+              // 如果需要滚动条
+              // scrollbar: {
+              //   el: '.swiper-scrollbar',
+              // },
+            }
+          );
+        });
+      },
+    },
+  },
 };
 </script>
 

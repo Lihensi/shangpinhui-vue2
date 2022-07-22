@@ -1,9 +1,9 @@
 <template>
   <div class="type-nav">
     <div class="container">
-      <div @mouseleave="leaveShow" @mouseenter="enterShow">
-        <h2 class="all">全部商品分类</h2>
-        <transition name='sort'>
+      <div @mouseleave="leaveIndex" @click="goSearch">
+        <h2 class="all" @mouseenter="enterShow">全部商品分类</h2>
+        <transition name="sort">
           <div class="sort" v-show="show">
             <!-- 事件委派 -->
             <div class="all-sort-list2" @click="goSearch">
@@ -101,7 +101,6 @@ export default {
     };
   },
   mounted() {
-
     // 当组件挂在完毕，让show属性变为false，加个判断条件
     if (this.$route.path != "/home") {
       this.show = false;
@@ -125,8 +124,12 @@ export default {
       this.currentIndex = index;
       console.log("处理业务" + index);
     }, 10),
-    leaveIndex(index) {
+    leaveIndex() {
+      // this.currentIndex = -1;
       this.currentIndex = -1;
+      if (this.$route.path != "/home") {
+        this.show = false;
+      }
     },
     // 路由跳转
     goSearch(event) {
@@ -146,20 +149,26 @@ export default {
         } else {
           query.category3Id = category3id;
         }
-        location.query = query;
-        // 路由跳转
-        this.$router.push(location);
+        // location.query = query;
+        // // 路由跳转
+        // this.$router.push(location);
+        // 判断是否带params参数
+        if (this.$route.params) {
+          location.params = this.$route.params;
+          location.query = query;
+          this.$router.push(location);
+        }
       }
     },
     enterShow() {
-      this.show = true;
-    },
-    leaveShow() {
-      this.currentIndex = -1;
-      if (this.$route.path != "home") {
-        this.show = false;
+      if (this.$route.path != "/home") {
+        this.show = true;
       }
+      // this.show = true;
     },
+    // leaveShow() {
+
+    // },
   },
 };
 </script>
@@ -291,14 +300,14 @@ export default {
       }
     }
     // 过渡动画的样式
-    .sort-enter{
+    .sort-enter {
       height: 0;
     }
-    .sort-enter-to{
+    .sort-enter-to {
       height: 461px;
     }
-    .sort-enter-active{
-      transition: all .5s linear;
+    .sort-enter-active {
+      transition: all 0.5s linear;
     }
   }
 }
