@@ -3,18 +3,23 @@
     <TypeNav />
     <div class="main">
       <div class="py-container">
-        <!--bread-->
+        <!--bread 面包屑-->
         <div class="bread">
           <ul class="fl sui-breadcrumb">
             <li>
               <a href="#">全部结果</a>
             </li>
           </ul>
+          <!-- 可能有可能没有,判断v-if -->
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">
+              {{ searchParams.categoryName
+              }}<i @click="removeCategoryName">x</i>
+            </li>
+            <li class="with-x" v-if="searchParams.keyword">
+              {{ searchParams.keyword
+              }}<i @click="removeKeyword">x</i>
+            </li>
           </ul>
         </div>
 
@@ -146,15 +151,27 @@ export default {
         categoryName: "",
         keyword: "",
         // 排序
-        order: "",
+        order: "1:desc",
         // 分页器
         pageNo: 1,
         // 每页展示的
         pageSize: 10,
+        // 操作所带参数
         props: [],
+        // 品牌
         trademark: "",
       },
     };
+  },
+  // 在组件挂载完毕前执行一次
+  beforeMount() {
+    // this.searchParams.category1Id = this.$route.query.category1Id;
+    // this.searchParams.category2Id = this.$route.query.category2Id;
+    // this.searchParams.category3Id = this.$route.query.category3Id;
+    // this.searchParams.categoryName = this.$route.query.categoryName;
+    // this.searchParams.keyword=this.$route.params.keyword
+    //  在发请求之前，把参数整理好
+    Object.assign(this.searchParams, this.$route.query, this.$route.params);
   },
   // 组件挂载完毕只执行一次
   mounted() {
@@ -171,6 +188,44 @@ export default {
     getData() {
       // this.$store.dispatch("getSearchList", this.{});
       this.$store.dispatch("getSearchList", this.searchParams);
+    },
+    removeCategoryName() {
+      // 参数置空再发请求,
+      // undefined,带给服务器的参数都是可有可无的，为空的属性依旧带给服务器
+      // 为了节省宽带，undefined不会带给服务器
+      this.searchParams.categoryName = "undefined";
+      this.searchParams.category1Id = "undefined";
+      this.searchParams.category2Id = "undefined";
+      this.searchParams.category3Id = "undefined";
+      getData();
+      // 地址跳转到自己这里
+      if (this.$route.params) {
+        this.$$router.push({ name: "search", params: this.$route.params });
+      }
+    },    removeKeyword() {
+      // 参数置空再发请求,
+      // undefined,带给服务器的参数都是可有可无的，为空的属性依旧带给服务器
+      // 为了节省宽带，undefined不会带给服务器
+      this.searchParams.cateKeyword = "undefined";
+      getData();
+      // 地址跳转到自己这里
+      if (this.$route.params) {
+        this.$$router.push({ name: "search", params: this.$route.params });
+      }
+    },
+  },
+  watch: {
+    // 监听属性,监听路由的变化，路由信息发生变化，变法一次请求
+    $$route(oldValue, newValue) {
+      // 数据很复杂时，才考虑深度监听
+      // 再次发起请求前，整理参数
+      Object.assign(this.searchParams, this.$route.query, this.$route.params);
+      this.getData();
+      // 每次请求，把一二三级id置空,是下一次参数显示下一次的
+      // 每一次路由发生变化是，都会赋予新的数据
+      this.searchParams.category1Id = "undefined";
+      this.searchParams.category2Id = "undefined";
+      this.searchParams.category3Id = "undefined";
     },
   },
 };

@@ -1,19 +1,20 @@
 <template>
   <div class="type-nav">
     <div class="container">
+      <!-- 事件的委派 -->
       <div @mouseleave="leaveIndex" @click="goSearch">
         <h2 class="all" @mouseenter="enterShow">全部商品分类</h2>
         <transition name="sort">
           <div class="sort" v-show="show">
-            <!-- 事件委派 -->
-            <div class="all-sort-list2" @click="goSearch">
+            <!-- <div class="all-sort-list2" @click="goSearch"> -->
+            <div class="all-sort-list2">
               <div
                 class="item"
                 v-for="(c1, index) in categoryList"
                 :key="c1.categoryId"
-                :class="{ cur: currentIndex == index }"
+                 
               >
-                <h3 @mouseenter="changeIndex(index)" @mouseleave="leaveIndex">
+                <h3 @mouseenter="changeIndex(index)" :class="{ cur: currentIndex == index}">
                   <!-- 索引值,编程式导航 -->
                   <a
                     :data-categoryName="c1.categoryName"

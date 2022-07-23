@@ -29,7 +29,7 @@ const getters = {
   },
   trademarkList(state) {
     // 有问题的，返回的可能是undefined
-    return state.searchList.trademarksList||[];
+    return state.searchList.trademarkList||[];
   },
   attrsList(state) {
     // 有问题的，返回的可能是undefined
