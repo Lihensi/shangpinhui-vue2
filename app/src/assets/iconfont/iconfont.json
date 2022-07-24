@@ -1,0 +1,23 @@
+{
+  "id": "3542835",
+  "name": "shangpinhui",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "629331",
+      "name": "上翻",
+      "font_class": "shangfan",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "630082",
+      "name": "下翻",
+      "font_class": "xiafan",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    }
+  ]
+}

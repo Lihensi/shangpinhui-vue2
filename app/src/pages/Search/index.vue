@@ -17,37 +17,50 @@
               }}<i @click="removeCategoryName">x</i>
             </li>
             <li class="with-x" v-if="searchParams.keyword">
-              {{ searchParams.keyword
-              }}<i @click="removeKeyword">x</i>
+              {{ searchParams.keyword }}<i @click="removeKeyword">x</i>
+            </li>
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark }}<i @click="removeTrademark">x</i>
+            </li>
+            <!-- <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark }}<i @click="removeTrademark">x</i>
+            </li> -->
+            <li
+              class="with-x"
+              v-for="(attrValue, index) in searchParams.props"
+              :key="index"
+            >
+              {{ attrValue.split(":")[1] }}<i @click="removeAttr(index)">×</i>
             </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo" />
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: isOne }" @click="changeOrder(1)">
+                  <a
+                    >综合
+                    <span
+                      v-show="isOne"
+                      class="iconfont"
+                      :class="{ 'icon-DOWN': isDesc, 'icon-UP': isAsc }"
+                    ></span
+                  ></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: isTwo }" @click="changeOrder(2)">
+                  <a :class="{ active: isTwo }"
+                    >价格<span
+                      v-show="isTwo"
+                      class="iconfont"
+                      :class="{ 'icon-DOWN': isDesc, 'icon-UP': isAsc }"
+                    ></span
+                  ></a>
                 </li>
               </ul>
             </div>
@@ -99,35 +112,7 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pagination  :pageNo="8" :pageSize="3" :total="91" :continues="5" />
         </div>
       </div>
     </div>
@@ -181,6 +166,18 @@ export default {
   computed: {
     // mapGetters,传递的是数组
     ...mapGetters(["goodsList"]),
+    isOne() {
+      return this.searchParams.order.indexOf("1") != -1;
+    },
+    isTwo() {
+      return this.searchParams.order.indexOf("2") != -1;
+    },
+    isAsc() {
+      return this.searchParams.order.indexOf("asc") != -1;
+    },
+    isDesc() {
+      return this.searchParams.order.indexOf("desc") != -1;
+    },
   },
   methods: {
     // 向服务器发起请求，参数不同，展示不同
@@ -193,30 +190,73 @@ export default {
       // 参数置空再发请求,
       // undefined,带给服务器的参数都是可有可无的，为空的属性依旧带给服务器
       // 为了节省宽带，undefined不会带给服务器
-      this.searchParams.categoryName = "undefined";
-      this.searchParams.category1Id = "undefined";
-      this.searchParams.category2Id = "undefined";
-      this.searchParams.category3Id = "undefined";
-      getData();
-      // 地址跳转到自己这里
-      if (this.$route.params) {
-        this.$$router.push({ name: "search", params: this.$route.params });
-      }
-    },    removeKeyword() {
-      // 参数置空再发请求,
-      // undefined,带给服务器的参数都是可有可无的，为空的属性依旧带给服务器
-      // 为了节省宽带，undefined不会带给服务器
-      this.searchParams.cateKeyword = "undefined";
-      getData();
+      this.searchParams.categoryName = undefined;
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
+      this.getData();
       // 地址跳转到自己这里
       if (this.$route.params) {
         this.$$router.push({ name: "search", params: this.$route.params });
       }
     },
+    removeKeyword() {
+      // 参数置空再发请求,
+      // undefined,带给服务器的参数都是可有可无的，为空的属性依旧带给服务器
+      // 为了节省宽带，undefined不会带给服务器
+      this.searchParams.keyword = undefined;
+      this.getData();
+      // 通知兄弟组件hearder清除关键字
+      this.$bus.$emit("clear");
+      // 进行路由跳转
+      if (this.$route.query) {
+        this.$router.push({ name: "search", query: this.$route.query });
+      }
+    },
+    trademarkInfo(trademark) {
+      // 整理参数
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      this.getData();
+    },
+    removeTrademark() {
+      this.searchParams.trademark = undefined;
+      this.getData();
+    },
+    attrInfo(attr, attrValue) {
+      console.log(attr, attrValue);
+      let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      // 数组去重
+      if (this.searchParams.props.indexOf(props) == -1) {
+        this.searchParams.props.push(props);
+      }
+      this.getData();
+    },
+    removeAttr(index) {
+      this.searchParams.props.splice(index, 1);
+      this.getData();
+    },
+    changeOrder(flag) {
+      // flag标识用户点击的是综合还是价格
+      let originFlag = this.searchParams.order.split(":")[0];
+      let originSort = this.searchParams.order.split(":")[1];
+      //准备一个新的数值，将来赋值给order
+      let newOrder = "";
+      //高亮的判断
+      if (flag == originFlag) {
+        newOrder = `${originFlag}:${originSort == "desc" ? "asc" : "desc"}`;
+      } else {
+        //不是高亮的按钮
+        newOrder = `${flag}:${"desc"}`;
+      }
+      //重新给order赋予新的数值
+      this.searchParams.order = newOrder;
+      //重新发一次请求
+      this.getData();
+    },
   },
   watch: {
     // 监听属性,监听路由的变化，路由信息发生变化，变法一次请求
-    $$route(oldValue, newValue) {
+    $route(oldValue, newValue) {
       // 数据很复杂时，才考虑深度监听
       // 再次发起请求前，整理参数
       Object.assign(this.searchParams, this.$route.query, this.$route.params);

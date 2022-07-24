@@ -57,8 +57,8 @@ export default {
   name: "Header",
   data() {
     return {
-      keyword:''
-    }
+      keyword: "",
+    };
   },
   methods: {
     goSearch() {
@@ -68,13 +68,22 @@ export default {
       // 模板字符串
       // this.$router.push(`/search/${this.keyword}?k={this.keyword.toUpperCase()}`)
       //对象写法，需要给路由命个名,一般这么写
-      if(this.$route.query){
-        let location={name:"search",params:{keyword:this.keyword||undefined}};
-        location.query=this.$route.query;
-        this.$router.push(location)
+      if (this.$route.query) {
+        let location = {
+          name: "search",
+          params: { keyword: this.keyword || undefined },
+        };
+        location.query = this.$route.query;
+        this.$router.push(location);
       }
       //  this.$router.push({name:"search",params:{keyword:this.keyword||undefined}})
     },
+  },
+  mounted() {
+    // 通过全局事件总线清除关键字
+    this.$bus.$on("clear", () => {
+      this.keyword = "";
+    });
   },
 };
 </script>
