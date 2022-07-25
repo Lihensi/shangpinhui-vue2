@@ -418,11 +418,12 @@ export default {
           skuNum: this.skuNum,
         });
         //路由跳转:携带参数,携带参数一般都是基本类型数据【字符串、数字等等】，引用类型数据白扯【传递过来路由获取不到】！！！
-        //浏览器存储功能，在路由跳转在之前，存储到浏览器中
+        //浏览器存储功能，在路由跳转在之前，存储到浏览器中,一半存储字符串,会话存储 
         sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo));
         //路由跳转
         this.$router.push({
           path: "/addcartsuccess",
+          // name:'addcartsuccess',
           query: { skuNum: this.skuNum },
         });
       } catch (error) {

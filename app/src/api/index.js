@@ -29,3 +29,6 @@ export const reqDetailList = (skuId)=>requests({url:`/item/${skuId}`,method:'get
 
 //加入购物车|将来修改商品个数的接口
 export const reqAddOrUpdateCart = (skuId,skuNum)=>requests({url:`/cart/addToCart/${skuId}/${skuNum}`,method:'post'});
+
+// 获取购物车列表数据接口
+export const reqCartList=()=>({url:'/cart/cartlist',method:'get'})

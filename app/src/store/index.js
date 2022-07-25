@@ -7,10 +7,11 @@ Vue.use(Vuex);
 import home from './home'
 import search from './search'
 import detail from './detail';
+import shopcart from './shopcart'
 
 export default new Vuex.Store({
 // state,mutations,actions,getters
 modules:{
-  home,search,detail
+  home,search,detail,shopcart
 }
 })
