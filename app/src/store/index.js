@@ -6,18 +6,11 @@ Vue.use(Vuex);
 // 引入小仓库
 import home from './home'
 import search from './search'
-// const state={};
-
-// const mutations={};
-
-// const actions={};
-
-// const getters={};
-
+import detail from './detail';
 
 export default new Vuex.Store({
 // state,mutations,actions,getters
 modules:{
-  home,search
+  home,search,detail
 }
 })

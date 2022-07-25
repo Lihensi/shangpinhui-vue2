@@ -75,9 +75,8 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
-                      ><img :src="good.defaultImg"
-                    /></a>
+                    <!-- 带参数  -->
+                    <router-link :to="`/detail/${good.id}`"><img :src="good.defaultImg" /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -112,7 +111,13 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <Pagination  :pageNo="8" :pageSize="3" :total="91" :continues="5" />
+          <Pagination
+            :pageNo="searchParams.pageNo"
+            :pageSize="searchParams.pageSize"
+            :total="total"
+            :continues="5"
+            @getPageNo="getPageNo"
+          />
         </div>
       </div>
     </div>
@@ -120,7 +125,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import SearchSelector from "./SearchSelector/SearchSelector";
 export default {
   name: "Search",
@@ -140,7 +145,7 @@ export default {
         // 分页器
         pageNo: 1,
         // 每页展示的
-        pageSize: 10,
+        pageSize: 3,
         // 操作所带参数
         props: [],
         // 品牌
@@ -166,6 +171,9 @@ export default {
   computed: {
     // mapGetters,传递的是数组
     ...mapGetters(["goodsList"]),
+    ...mapState({
+      total: (state) => state.search.searchList.total,
+    }),
     isOne() {
       return this.searchParams.order.indexOf("1") != -1;
     },
@@ -197,7 +205,7 @@ export default {
       this.getData();
       // 地址跳转到自己这里
       if (this.$route.params) {
-        this.$$router.push({ name: "search", params: this.$route.params });
+        this.$router.push({ name: "search", params: this.$route.params });
       }
     },
     removeKeyword() {
@@ -251,6 +259,10 @@ export default {
       //重新给order赋予新的数值
       this.searchParams.order = newOrder;
       //重新发一次请求
+      this.getData();
+    },
+    getPageNo(pageNo) {
+      this.searchParams.pageNo = pageNo;
       this.getData();
     },
   },

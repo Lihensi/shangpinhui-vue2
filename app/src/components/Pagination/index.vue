@@ -1,19 +1,37 @@
 <template>
   <div class="pagination">
-    <button>上一页</button>
-    <button>1</button>
+    <h1>{{ startNumEndNum }}----当前页码{{ pageNo }}</h1>
+    <button :disabled="pageNo == 1" @click="$emit('getPageNo', pageNo - 1)">
+      上一页
+    </button>
+    <button v-if="startNumEndNum.start > 1" @click="$emit('getPageNo', 1)" :class="{active:pageNo==1}">
+      1
+    </button>
 
-    <button>···</button>
-
-    <button>3</button>
-    <button>4</button>
-    <button>5</button>
-    <button>6</button>
-    <button>7</button>
-
-    <button>···</button>
-    <button>9</button>
-    <button>下一页</button>
+    <button v-if="startNumEndNum.start > 2">···</button>
+    <!-- 中间部分 -->
+    <button
+      v-for="(page, index) in startNumEndNum.end"
+      :key="index"
+      v-if="page >= startNumEndNum.start"
+      @click="$emit('getPageNo', page)" :class="{active:pageNo==page}"
+    >
+      {{ page }}
+    </button>
+<!-- 下 -->
+    <button v-if="startNumEndNum.end < totalPage - 1">···</button>
+    <button
+      v-if="startNumEndNum.end < totalPage"
+      @click="$emit('getPageNo', totalPage)" :class="{active:pageNo==totalPage}"
+    >
+      {{ totalPage }}
+    </button>
+    <button
+      :disabled="pageNo == totalPage"
+      @click="$emit('getPageNo', pageNo + 1)"
+    >
+      下一页
+    </button>
 
     <button style="margin-left: 30px">共 {{ total }} 条</button>
   </div>
@@ -34,7 +52,7 @@ export default {
       //算出连续页码:开始与结束这两个数字
       let start = 0,
         end = 0;
-      const {  continues, pageNo,totalPage } = this;
+      const { continues, pageNo, totalPage } = this;
       //特殊情况:总共页数小于连续页码数
       if (totalPage < continues) {
         start = 1;
@@ -91,6 +109,9 @@ export default {
       cursor: not-allowed;
       background-color: #409eff;
       color: #fff;
+      .active{
+        background-color: skyblue;
+      }
     }
   }
 }
