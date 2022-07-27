@@ -399,9 +399,8 @@ export default {
       //用户输入进来非法情况判断
       if (isNaN(value) || value < 1) {
         this.skuNum = 1;
-        console.log("输入非法");
       } else {
-        //正常情况，大于且为整数
+        //正常情况
         this.skuNum = parseInt(value);
       }
     },
@@ -418,13 +417,12 @@ export default {
           skuNum: this.skuNum,
         });
         //路由跳转:携带参数,携带参数一般都是基本类型数据【字符串、数字等等】，引用类型数据白扯【传递过来路由获取不到】！！！
-        //浏览器存储功能，在路由跳转在之前，存储到浏览器中,一半存储字符串,会话存储 
-        sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo));
+        //浏览器存储功能，在路由跳转在之前，存储到浏览器中
+        sessionStorage.setItem('SKUINFO',JSON.stringify(this.skuInfo));
         //路由跳转
         this.$router.push({
           path: "/addcartsuccess",
-          // name:'addcartsuccess',
-          query: { skuNum: this.skuNum },
+          query: { skuNum: this.skuNum},
         });
       } catch (error) {
         //失败干什么

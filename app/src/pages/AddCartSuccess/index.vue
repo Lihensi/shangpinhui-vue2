@@ -5,18 +5,16 @@
       <div class="goods">
         <div class="left-good">
           <div class="left-pic">
-            <img :src="skuInfo.skuDefaultImg">
+            <img :src="info.skuDefaultImg">
           </div>
           <div class="right-info">
-            <p class="title">{{skuInfo.skuName}}</p>
-            <p class="attr">{{skuInfo.skuDesc}} 数量为:{{$route.query.skuNum}}</p>
+            <p class="title">{{info.skuName}}</p>
+            <p class="attr">{{info.skuDesc}}数量:{{$route.query.skuNum}}</p>
           </div>
         </div>
         <div class="right-gocart">
-          <!-- <a href="javascript:" class="sui-btn btn-xlarge">查看商品详情</a> -->
-          <router-link class="sui-btn btn-xlarge" :to="`/detail/${skuInfo.id}`">查看商品详情</router-link>
-          <!-- <a href="javascript:" >去购物车结算 > </a> -->
-          <router-link :to="`/shopcart`">去购物车结算</router-link>
+          <router-link class="sui-btn btn-xlarge" :to="`/detail/${info.id}`">查看商品详情</router-link>
+          <router-link to="/shopcart">去购物车结算 > </router-link>
         </div>
       </div>
     </div>
@@ -24,19 +22,16 @@
 </template>
 
 <script>
+
   export default {
     name: 'AddCartSuccess',
-//     computed:{
-//       skuInfo(){
-// return this.$route.skuInfo
-//       },
-//     },
- data() {
+    data() {
       return {
         //购物车成功组件，获取会话存储的数据【商品信息】
-        skuInfo:JSON.parse(sessionStorage.getItem('SKUINFO'))||{}
+        info:JSON.parse(sessionStorage.getItem('SKUINFO'))||{}
       }
- },}
+    },
+  }
 </script>
 
 <style lang="less" scoped>

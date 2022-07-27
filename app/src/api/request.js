@@ -3,6 +3,7 @@ import axios from "axios";
 import nprogress  from "nprogress";
 // start 进度条开始 done 结束
 
+import store from '@/store' 
 // 引入进度条样式,默认蓝色，可修改
 import 'nprogress/nprogress.css'
 //创建一个axios实例 
@@ -15,6 +16,9 @@ timeout:5000,
 
 // 请求拦截器，在发请求前，请求拦截器可以检测到，做一些事情
 requests.interceptors.request.use((config)=>{
+  if(store.state.detail.uuid_token){
+    config.headers.userTempId=store.state.detail.uuid_token
+  }
   // config 配置对象，headers请求头很重要
   nprogress.start()
   return config;
