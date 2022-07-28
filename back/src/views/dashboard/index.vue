@@ -9,11 +9,14 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
-  }
+    mounted(){
+    this.$store.dispatch('getData');
+  },
+  // computed: {
+  //   ...mapGetters([
+  //     'name'
+  //   ])
+  // },
 }
 </script>
 
